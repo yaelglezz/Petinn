@@ -64,6 +64,34 @@ Solo número + unidad.`
 
 }
 
+async function responderCorrecto(numero) {
+
+  if (numero.startsWith("521")) {
+  numero = "52" + numero.slice(3);
+}
+  const url = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
+
+  const payload = {
+    messaging_product: "whatsapp",
+    to: numero,
+    type: "text",
+    text: {
+      body:
+`Revisión asignada para dentro de ${mensaje}`
+    }
+  };
+
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+}
+
 
 app.post('/', async (req, res) => {
 
