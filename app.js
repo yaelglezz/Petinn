@@ -152,6 +152,7 @@ app.post('/', async (req, res) => {
     });
 
     console.log("Enviado a Google Script");
+    await responderCorrecto(numero);
 
   } catch (error) {
 
