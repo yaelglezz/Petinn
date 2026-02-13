@@ -19,10 +19,16 @@ function normalizarUnidad(texto) {
   return null;
 }
 
+console.log("TOKEN:", process.env.WHATSAPP_TOKEN ? "OK" : "NO");
+console.log("PHONE ID:", process.env.PHONE_NUMBER_ID);
+
 async function responderError(numero) {
 
-  const token = process.env.EAAa9mvhueHYBQvwxLaQ1fC7YBtJas0Y1GdOSAvr4EC858E5PmLT19YmRbQKKttupyT0apUUniBFr3FGApBRzdAJpZBszZCJYWHPayM8DU3Xvhr4etYKoYzuEL8rKEPMV8Nrt522YrW7dEITWEy1ExapBolAOPtIROCigZBcGNUJqB5416ZCVnuoZCSzeCQhK512QG3vkZAn1fEnJZBxD4jpZBgCZBn3dzzPI4pwRnnIEtEjZC1ZBXNPIlWdgup3tkxazHZBOLq1x2RiVz2v6ZCf0etadkUHji;
-  const phoneNumberId = process.env.971145772753205;
+  console.log("Entró a responderError");
+  console.log("Numero destino:", numero);
+
+  const token = process.env.WHATSAPP_TOKEN;
+  const phoneNumberId = process.env.PHONE_NUMBER_ID;
 
   const url = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
 
