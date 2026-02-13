@@ -24,6 +24,10 @@ console.log("PHONE ID:", process.env.PHONE_NUMBER_ID);
 
 async function responderError(numero) {
 
+if (numero.startsWith("521")) {
+  numero = "52" + numero.slice(3);
+}
+
   console.log("Entró a responderError");
   console.log("Numero destino:", numero);
 
