@@ -22,7 +22,7 @@ function normalizarUnidad(texto) {
 async function responderError(numero) {
 
   const token = process.env.WHATSAPP_TOKEN;
-  const phoneNumberId = process.env.PHONE_NUMBER_ID;
+  const phoneNumberId = process.env.971145772753205;
 
   const url = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
 
