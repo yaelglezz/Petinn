@@ -64,11 +64,13 @@ Solo número + unidad.`
 
 }
 
-async function responderCorrecto(numero) {
+async function responderCorrecto(numero, mensaje) {
 
   if (numero.startsWith("521")) {
   numero = "52" + numero.slice(3);
 }
+  const token = process.env.WHATSAPP_TOKEN;        
+  const phoneNumberId = process.env.PHONE_NUMBER_ID;
   const url = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
 
   const payload = {
@@ -152,7 +154,7 @@ app.post('/', async (req, res) => {
     });
 
     console.log("Enviado a Google Script");
-    await responderCorrecto(numero);
+    await responderCorrecto(numero, mensaje);
 
   } catch (error) {
 
