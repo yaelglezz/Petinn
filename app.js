@@ -94,6 +94,13 @@ async function responderCorrecto(numero, mensaje) {
 
 }
 
+function limpiarTexto(texto) {
+  return texto
+    .replace(/\u2060/g, "")
+    .replace(/\u200B/g, "")
+    .trim();
+}
+
 
 app.post('/', async (req, res) => {
 
@@ -102,32 +109,39 @@ app.post('/', async (req, res) => {
 
   try {
 
-    const mensaje =
+    let mensaje =
       req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.text?.body || "";
 
     const numero =
       req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.from || "";
 
+    mensake = limpiarTexto(mensaje);
+
     console.log("Numero:", numero);
     console.log("Mensaje:", mensaje);
 
 
-    const esLista = /^\d+\./m.test(mensaje);
+const esLista =
+  mensaje.split("\n").length > 1 &&
+  /^\d+\./m.test(mensaje);
+
 
 if (!esLista) {
 
   const match = mensaje.match(regexFormato);
 
   if (!match) {
-
-    console.log("Formato invalido");
     await responderError(numero);
     return res.sendStatus(200);
   }
 
   const cantidad = match[1];
-  const unidadRaw = match[2];
-  const unidad = normalizarUnidad(unidadRaw);
+  const unidad = normalizarUnidad(match[2]);
+
+  if (!unidad) {
+    await responderError(numero);
+    return res.sendStatus(200);
+  }
 
   await fetch(scriptURL, {
     method: "POST",
@@ -135,7 +149,6 @@ if (!esLista) {
     body: JSON.stringify({
       tipo: "individual",
       numero,
-      mensaje,
       cantidad,
       unidad
     }),
@@ -158,41 +171,6 @@ if (!esLista) {
   });
 
 }
-
-
-
-    const cantidad = match[1];
-    const unidadRaw = match[2];
-
-    const unidad = normalizarUnidad(unidadRaw);
-
-    if (!unidad) {
-
-      console.log("Unidad invalida");
-
-      await responderError(numero);
-
-      return res.sendStatus(200);
-    }
-
-    console.log("Cantidad:", cantidad);
-    console.log("Unidad:", unidad);
-    
-
-    await fetch(scriptURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        numero,
-        mensaje,
-        cantidad,
-        unidad
-      }),
-    });
-
-    console.log("Enviado a Google Script");
-    await responderCorrecto(numero, mensaje);
-
   } catch (error) {
 
     console.error("Error:", error);
