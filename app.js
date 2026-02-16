@@ -112,16 +112,53 @@ app.post('/', async (req, res) => {
     console.log("Mensaje:", mensaje);
 
 
-    const match = mensaje.match(regexFormato);
+    const esLista = /^\d+\./m.test(mensaje);
 
-    if (!match) {
+if (!esLista) {
 
-      console.log("Formato invalido");
+  const match = mensaje.match(regexFormato);
 
-      await responderError(numero);
+  if (!match) {
 
-      return res.sendStatus(200);
-    }
+    console.log("Formato invalido");
+    await responderError(numero);
+    return res.sendStatus(200);
+  }
+
+  const cantidad = match[1];
+  const unidadRaw = match[2];
+  const unidad = normalizarUnidad(unidadRaw);
+
+  await fetch(scriptURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipo: "individual",
+      numero,
+      mensaje,
+      cantidad,
+      unidad
+    }),
+  });
+
+  await responderCorrecto(numero, mensaje);
+
+} else {
+
+  console.log("Respuesta tipo lista detectada");
+
+  await fetch(scriptURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      tipo: "lista",
+      numero,
+      mensaje
+    }),
+  });
+
+}
+
 
 
     const cantidad = match[1];
